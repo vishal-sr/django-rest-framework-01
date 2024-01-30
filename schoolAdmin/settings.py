@@ -37,6 +37,9 @@ INSTALLED_APPS = [
     "django.contrib.sessions",
     "django.contrib.messages",
     "django.contrib.staticfiles",
+
+    "students",
+    "rest_framework"
 ]
 
 MIDDLEWARE = [
@@ -75,8 +78,10 @@ WSGI_APPLICATION = "schoolAdmin.wsgi.application"
 
 DATABASES = {
     "default": {
-        "ENGINE": "django.db.backends.sqlite3",
-        "NAME": BASE_DIR / "db.sqlite3",
+        "ENGINE": "django.db.backends.mysql",
+        "NAME": "studentsdb",
+        "USER": "root",
+        "PASSWORD": "test1234"
     }
 }
 
