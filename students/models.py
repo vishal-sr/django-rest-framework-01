@@ -9,3 +9,4 @@ class Student(models.Model):
     score = models.DecimalField(max_digits=5, decimal_places=2, validators=[
         MinValueValidator(0), MaxValueValidator(100)
     ])
+    email = models.EmailField(max_length=50, null=True)
