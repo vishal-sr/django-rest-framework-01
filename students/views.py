@@ -3,20 +3,20 @@ from django.shortcuts import render
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.views import APIView
 
 from .models import Student
 from .serializers import StudentSerializer
 # Create your views here.
 
 
-@api_view(['GET', 'POST'])
-def all_students(request):
-    if request.method == "GET":
+class AllStudents(APIView)
+    def get(self, request):
         modelData = Student.objects.all()
         serializer = StudentSerializer(modelData, many=True)
         return Response(serializer.data)
 
-    elif request.method == "POST":
+    def post(self, request)
         serializer = StudentSerializer(request.data)
         if serializer.is_valid():
             serializer.save()
