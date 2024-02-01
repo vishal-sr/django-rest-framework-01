@@ -3,20 +3,20 @@ from django.shortcuts import render
 from rest_framework.decorators import api_view
 from rest_framework.response import Response
 from rest_framework import status
+from rest_framework.views import APIView
 
 from .models import Student
 from .serializers import StudentSerializer
 # Create your views here.
 
 
-@api_view(['GET', 'POST'])
-def all_students(request):
-    if request.method == "GET":
+class AllStudents(APIView):
+    def get(self, request):
         modelData = Student.objects.all()
         serializer = StudentSerializer(modelData, many=True)
         return Response(serializer.data)
 
-    elif request.method == "POST":
+    def post(self, request):
         serializer = StudentSerializer(request.data)
         if serializer.is_valid():
             serializer.save()
@@ -24,24 +24,28 @@ def all_students(request):
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
 
-@api_view(["GET", "PUT", "DELETE"])
-def one_student(request, id):
-    try:
-        student = Student.objects.get(pk=id)
-    except Student.DoesNotExist:
-        return Response(status=status.HTTP_404_NOT_FOUND)
+class OneStudent(APIView):
+    def get_student(id):
+        try:
+            student = Student.objects.get(id=id)
+        except:
+            return Response(status=status.HTTP_404_NOT_FOUND)
+        return student
 
-    if request.method == "GET":
+    def get(self, request, id):
+        student = OneStudent.get_student(id=id)
         serializer = StudentSerializer(student)
-        return Response(serializer.data)
+        return Response(serializer.data, status=status.HTTP_200_OK)
 
-    elif request.method == "PUT":
+    def put(self, request, id):
+        student = OneStudent.get_student(id=id)
         serializer = StudentSerializer(student, data=request.data)
         if serializer.is_valid():
             serializer.save()
-            return Response(serializer.data, status=status.HTTP_200_OK)
-        return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+            return Response(serializer.data, status=status.HTTP_201_CREATED)
+        Response(serializer.data, status=status.HTTP_400_BAD_REQUEST)
 
-    elif request.method == "DELETE":
+    def delete(self, request, id):
+        student = OneStudent.get_student(id=id)
         student.delete()
         return Response(status=status.HTTP_200_OK)
