@@ -1,9 +1,6 @@
 from django.shortcuts import render
 
 from rest_framework.decorators import api_view
-from rest_framework.response import Response
-from rest_framework import status
-from rest_framework.views import APIView
 from rest_framework import mixins, generics
 
 from .models import Student
@@ -11,15 +8,9 @@ from .serializers import StudentSerializer
 # Create your views here.
 
 
-class AllStudents(mixins.ListModelMixin, mixins.CreateModelMixin, generics.GenericAPIView):
+class AllStudents(generics.ListCreateAPIView):
     queryset = Student.objects.all()
     serializer_class = StudentSerializer
-
-    def get(self, request):
-        return self.list(request)
-
-    def post(self, request):
-        return self.create(request)
 
 
 class OneStudent(mixins.RetrieveModelMixin, mixins.UpdateModelMixin, mixins.DestroyModelMixin, generics.GenericAPIView):
